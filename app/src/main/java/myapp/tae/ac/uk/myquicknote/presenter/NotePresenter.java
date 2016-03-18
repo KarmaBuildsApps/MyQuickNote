@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.RealmResults;
 import myapp.tae.ac.uk.myquicknote.constants.Constants;
+import myapp.tae.ac.uk.myquicknote.model.RestoreData;
 import myapp.tae.ac.uk.myquicknote.model.UserBriefNote;
 import myapp.tae.ac.uk.myquicknote.model.UserDetailNote;
 import myapp.tae.ac.uk.myquicknote.services.DataService;
@@ -62,7 +64,21 @@ public class NotePresenter {
         mNoteView.startNoteDetailToOpen(getBundleForActivityStart(userBriefNote));
     }
 
-    public List<UserBriefNote> getNoteList() {
+    public RealmResults<UserBriefNote> getNoteList() {
         return mService.getBriefNotes();
+    }
+
+    public void swipeFabIcon(int fabRemove) {
+
+    }
+
+    public void remove(UserBriefNote userBriefNote) {
+        mService.removeNote(userBriefNote.getNoteId());
+        mNoteView.notifyAdapterChange();
+    }
+
+    public void restore(RestoreData restoreData) {
+        mService.restoreNote(restoreData);
+        mNoteView.notifyAdapterChange();
     }
 }

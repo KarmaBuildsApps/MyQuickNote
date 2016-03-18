@@ -33,6 +33,7 @@ public class NoteDetailPresenter {
         String detailNote = mView.getNoteDetail();
         if (detailNote.isEmpty()) {
             mView.setDetailNoteEmptyError(R.string.error_detail_empty);
+            return;
         }
 
         mView.showSaveConfirmationDialog();

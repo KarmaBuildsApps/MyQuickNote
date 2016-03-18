@@ -2,6 +2,7 @@ package myapp.tae.ac.uk.myquicknote.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,8 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import myapp.tae.ac.uk.myquicknote.model.RestoreData;
 import myapp.tae.ac.uk.myquicknote.model.UserBriefNote;
 import myapp.tae.ac.uk.myquicknote.model.UserDetailNote;
 
@@ -21,23 +22,23 @@ import myapp.tae.ac.uk.myquicknote.model.UserDetailNote;
  * Created by Karma on 15/03/16.
  */
 public class DataService {
-    private SharedPreferences mPreferences;
-    private Realm mRealm;
+    SharedPreferences mPreferences;
+    Realm mRealm;
     private Context mContext;
+    public final static String TAG = DataService.class.getName();
 
     public DataService(Context context) {
-        this.mContext = context;
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context).build();
-        mRealm = Realm.getInstance(realmConfiguration);
+        mRealm = Realm.getInstance(context);
     }
 
     public void createNote(String noteTitle, String noteContent) {
-        mRealm.beginTransaction();
-        UserBriefNote briefNote = mRealm.createObject(UserBriefNote.class);
         int nextId = autoIncrementId();
-        UserDetailNote noteDetail = mRealm.createObject(UserDetailNote.class);
-        noteDetail.setNoteId(nextId);
 
+        UserDetailNote noteDetail = new UserDetailNote();
+        noteDetail.setNoteDetailId(nextId);
+        noteDetail.setNote(noteContent);
+
+        UserBriefNote briefNote = new UserBriefNote();
         briefNote.setNoteId(nextId);
         briefNote.setNoteTitle(noteTitle);
         briefNote.setNoteFirstLine(getFirstLineOfNote(noteContent));
@@ -45,18 +46,21 @@ public class DataService {
         briefNote.setIsModified(false);
         briefNote.setDetailNote(noteDetail);
 
+        mRealm.beginTransaction();
+        mRealm.copyToRealmOrUpdate(noteDetail);
+        mRealm.copyToRealmOrUpdate(briefNote);
         mRealm.commitTransaction();
     }
 
-    public List<UserBriefNote> getBriefNotes() {
+    public RealmResults<UserBriefNote> getBriefNotes() {
         List<UserBriefNote> briefNotes = new ArrayList<>();
         RealmResults<UserBriefNote> queryResults = mRealm.where(UserBriefNote.class).findAll();
-        briefNotes = queryResults.subList(0, queryResults.size());
-        return briefNotes;
+//        briefNotes = queryResults.subList(0, queryResults.size());
+        return queryResults;
     }
 
     public UserDetailNote getNoteDetailById(int id) {
-        RealmResults<UserDetailNote> query = mRealm.where(UserDetailNote.class).equalTo("noteId", id).findAll();
+        RealmResults<UserDetailNote> query = mRealm.where(UserDetailNote.class).equalTo("noteDetailId", id).findAll();
         UserDetailNote detailNote = query.first();
         return detailNote;
     }
@@ -66,14 +70,14 @@ public class DataService {
         mRealm.beginTransaction();
         UserBriefNote briefNote = briefNoteResults.where().equalTo("noteId", id).findFirst();
         UserDetailNote detailNote = briefNote.getDetailNote();
-        briefNote.removeFromRealm();
         detailNote.removeFromRealm();
+        briefNote.removeFromRealm();
         mRealm.commitTransaction();
     }
 
     public void editNote(int id, String noteTitle, String noteContent) {
         UserDetailNote detailNote = new UserDetailNote();
-        detailNote.setNoteId(id);
+        detailNote.setNoteDetailId(id);
         detailNote.setNote(noteContent);
 
         UserBriefNote briefNote = new UserBriefNote();
@@ -101,11 +105,13 @@ public class DataService {
 
     private int autoIncrementId() {
         int nextId = mRealm.where(UserBriefNote.class).findAll().size();
+        Log.i(TAG, "autoIncrementId: Value = " + nextId);
         if (nextId == 0) {
             return nextId++;
         } else {
-            nextId = mRealm.where(UserBriefNote.class).findAll().max("noteId").intValue();
+            nextId = mRealm.where(UserBriefNote.class).findAll().max("noteId").intValue() + 1;
         }
+        Log.i(TAG, "autoIncrementId: Value 2: " + nextId);
         return nextId;
     }
 
@@ -114,5 +120,22 @@ public class DataService {
         Date date = calendar.getTime();
         return date;
 
+    }
+
+    public void restoreNote(RestoreData restoreData) {
+        UserDetailNote detailNote = new UserDetailNote();
+        detailNote.setNoteDetailId(restoreData.getRestoreId());
+        detailNote.setNote(restoreData.getFullNote());
+
+        UserBriefNote briefNote = new UserBriefNote();
+        briefNote.setNoteId(restoreData.getRestoreId());
+        briefNote.setNoteTitle(restoreData.getTitle());
+        briefNote.setNoteFirstLine(getFirstLineOfNote(restoreData.getFullNote()));
+        briefNote.setLastModified(restoreData.getLastModified());
+        briefNote.setDetailNote(detailNote);
+        mRealm.beginTransaction();
+        mRealm.copyToRealmOrUpdate(detailNote);
+        mRealm.copyToRealmOrUpdate(briefNote);
+        mRealm.commitTransaction();
     }
 }

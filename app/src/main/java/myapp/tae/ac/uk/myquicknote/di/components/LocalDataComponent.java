@@ -9,6 +9,7 @@ import io.realm.Realm;
 import myapp.tae.ac.uk.myquicknote.MainActivity;
 import myapp.tae.ac.uk.myquicknote.di.modules.AppModule;
 import myapp.tae.ac.uk.myquicknote.di.modules.LocalDataModule;
+import myapp.tae.ac.uk.myquicknote.services.DataService;
 
 /**
  * Created by Karma on 15/03/16.
@@ -21,6 +22,6 @@ public interface LocalDataComponent {
 
     SharedPreferences preferences();
 
-    void inject(MainActivity mainActivity);
+    void inject(DataService dataService);
 
 }

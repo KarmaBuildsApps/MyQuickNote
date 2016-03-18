@@ -21,7 +21,7 @@ public class MyApplicaton extends Application {
 //                .localDataModule(new LocalDataModule())
 //                .build();
     }
-
+//
 //    public LocalDataComponent getLocalDataComponent() {
 //        return mDataComponent;
 //    }

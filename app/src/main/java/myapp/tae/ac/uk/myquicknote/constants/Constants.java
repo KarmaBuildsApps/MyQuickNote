@@ -14,4 +14,6 @@ public class Constants {
     public static final String NOTE_DATE_STATUS = "NOTE_DATE_STATUS";
     public static final String NOTE_ID = "NOTE_ID";
     public static final String IS_NOTE_CONTENT_ALTERED = "IS_NOTE_CONTENT_ALTERED";
+    public static final int FAB_REMOVE = -1;
+    public static final int FAB_ADD = 1;
 }

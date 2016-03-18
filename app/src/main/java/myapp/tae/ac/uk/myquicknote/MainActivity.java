@@ -4,37 +4,41 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
+import io.realm.RealmResults;
 import myapp.tae.ac.uk.myquicknote.constants.Constants;
+import myapp.tae.ac.uk.myquicknote.model.RestoreData;
 import myapp.tae.ac.uk.myquicknote.model.UserBriefNote;
+import myapp.tae.ac.uk.myquicknote.model.UserDetailNote;
 import myapp.tae.ac.uk.myquicknote.presenter.INoteView;
 import myapp.tae.ac.uk.myquicknote.presenter.NotePresenter;
 import myapp.tae.ac.uk.myquicknote.services.DataService;
 import myapp.tae.ac.uk.myquicknote.ui.NoteDetailActvitiy;
-import myapp.tae.ac.uk.myquicknote.ui.NoteListAdapter;
+import myapp.tae.ac.uk.myquicknote.ui.NoteListRealmAdapter;
 
 
 public class MainActivity extends AppCompatActivity implements INoteView, View.OnClickListener {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.rcBriefNote)
-    RecyclerView mNoteRecyclerview;
     @Bind(R.id.fab)
     FloatingActionButton mFab;
+    @Bind(R.id.realm_recycler_view)
+    RealmRecyclerView mRealmRCV;
     private NotePresenter mPresenter;
-    private NoteListAdapter adapter;
+    private NoteListRealmAdapter adapter;
+    RestoreData temp = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +48,9 @@ public class MainActivity extends AppCompatActivity implements INoteView, View.O
         mPresenter = new NotePresenter(this, new DataService(getApplication()));
         setSupportActionBar(mToolbar);
         mFab.setOnClickListener(this);
-        List<UserBriefNote> noteList = mPresenter.getNoteList();
-        adapter = new NoteListAdapter(this, noteList);
-        mNoteRecyclerview.setLayoutManager(new LinearLayoutManager(this));
-        mNoteRecyclerview.setAdapter(adapter);
+        RealmResults<UserBriefNote> noteList = mPresenter.getNoteList();
+        adapter = new NoteListRealmAdapter(this, noteList, true, true);
+        mRealmRCV.setAdapter(adapter);
     }
 
     @Override
@@ -115,5 +118,24 @@ public class MainActivity extends AppCompatActivity implements INoteView, View.O
 
     public void startNoteDetailActivity(UserBriefNote userBriefNote) {
         mPresenter.startDetailActivity(userBriefNote);
+    }
+
+    public boolean showDeleteOption(final UserBriefNote userBriefNote) {
+//        temp.setRestoreId(userBriefNote.getNoteId());
+//        temp.setTitle(userBriefNote.getNoteTitle());
+//        temp.setLastModified(userBriefNote.getLastModified());
+//        temp.setFullNote(userBriefNote.getDetailNote().getNote());
+//        mPresenter.remove(userBriefNote);
+//        mPresenter.remove(userBriefNote);
+//        Snackbar.make(findViewById(R.id.clMainView), getString(R.string.action_delete_warning_message),
+//                Snackbar.LENGTH_LONG)
+//                .setAction(R.string.action_delete_UNDO, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mPresenter.restore(temp);
+//                    }
+//                }).show();
+
+        return false;
     }
 }

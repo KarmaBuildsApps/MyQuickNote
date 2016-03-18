@@ -1,8 +1,5 @@
 package myapp.tae.ac.uk.myquicknote.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -11,15 +8,15 @@ import io.realm.annotations.PrimaryKey;
  */
 public class UserDetailNote extends RealmObject {
     @PrimaryKey
-    private int noteId;
+    private int noteDetailId;
     private String note;
 
-    public int getNoteId() {
-        return noteId;
+    public int getNoteDetailId() {
+        return noteDetailId;
     }
 
-    public void setNoteId(int noteId) {
-        this.noteId = noteId;
+    public void setNoteDetailId(int noteDetailId) {
+        this.noteDetailId = noteDetailId;
     }
 
     public String getNote() {
