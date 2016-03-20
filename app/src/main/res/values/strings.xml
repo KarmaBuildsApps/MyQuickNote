@@ -9,7 +9,7 @@
     <string name="error_detail_empty">You must enter something in your Note content</string>
     <string name="save_confirm_dialog_title">Do you want to save the Note?</string>
     <string name="save_confirm_dialog_message">Press Save to save or Press Cancel to cancel the operation</string>
-    <string name="empty_list">Press plus button add new List</string>
+    <string name="empty_list">Press plus button add new List &amp; Swipe List item to delete</string>
     <string name="note_title_test">This is Title</string>
     <string name="note_first_line_test_text">This is the first line test text and there is supposed to be more text ...</string>
     <string name="last_modified_date_field">Last Modified</string>

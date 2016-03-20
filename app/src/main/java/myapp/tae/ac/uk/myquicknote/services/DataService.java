@@ -12,6 +12,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import myapp.tae.ac.uk.myquicknote.model.RestoreData;
@@ -22,14 +24,11 @@ import myapp.tae.ac.uk.myquicknote.model.UserDetailNote;
  * Created by Karma on 15/03/16.
  */
 public class DataService {
+    @Inject
     SharedPreferences mPreferences;
+    @Inject
     Realm mRealm;
-    private Context mContext;
     public final static String TAG = DataService.class.getName();
-
-    public DataService(Context context) {
-        mRealm = Realm.getInstance(context);
-    }
 
     public void createNote(String noteTitle, String noteContent) {
         int nextId = autoIncrementId();

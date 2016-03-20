@@ -1,6 +1,7 @@
 package myapp.tae.ac.uk.myquicknote.di.modules;
 
 import android.app.Application;
+import android.content.Context;
 
 import javax.inject.Singleton;
 
@@ -12,15 +13,15 @@ import dagger.Provides;
  */
 @Module
 public class AppModule {
-    private Application mApplication;
+    private Context mApplication;
 
-    public AppModule(Application application) {
+    public AppModule(Context application) {
         this.mApplication = application;
     }
 
     @Singleton
     @Provides
-    Application providesApplicationContext() {
+    Context providesApplicationContext() {
         return mApplication;
     }
 }

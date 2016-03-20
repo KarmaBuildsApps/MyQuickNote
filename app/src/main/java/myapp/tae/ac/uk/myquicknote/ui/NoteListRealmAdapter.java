@@ -62,9 +62,9 @@ public class NoteListRealmAdapter extends RealmBasedRecyclerViewAdapter<UserBrie
 
     @Override
     public void onItemSwipedDismiss(int position) {
-        super.onItemSwipedDismiss(position);
-//        Log.i(TAG, "onItemSwipedDismiss: This is swipe to delete");
-//        ((MainActivity) mContext).showDeleteOption(noteList.get(position));
+//        super.onItemSwipedDismiss(position);
+        Log.i(TAG, "onItemSwipedDismiss: This is swipe to delete");
+        ((MainActivity) mContext).showDeleteOption(noteList.get(position));
     }
 
     private String getDateInString(Date lastModified) {

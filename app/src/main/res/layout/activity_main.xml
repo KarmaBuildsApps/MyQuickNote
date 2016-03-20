@@ -41,8 +41,9 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add_note"
         android:tint="@color/colorFab"
-        app:borderWidth="0dp"
-        app:elevation="6dp"
-        app:fabSize="normal" />
+        app:elevation="@dimen/_6sdp"
+        app:fabSize="mini"
+
+        />
 
 </android.support.design.widget.CoordinatorLayout>

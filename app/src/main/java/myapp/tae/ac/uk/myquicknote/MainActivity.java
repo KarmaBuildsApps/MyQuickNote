@@ -3,6 +3,7 @@ package myapp.tae.ac.uk.myquicknote;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +12,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.Date;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.moonmonkeylabs.realmrecyclerview.RealmRecyclerView;
@@ -21,7 +19,6 @@ import io.realm.RealmResults;
 import myapp.tae.ac.uk.myquicknote.constants.Constants;
 import myapp.tae.ac.uk.myquicknote.model.RestoreData;
 import myapp.tae.ac.uk.myquicknote.model.UserBriefNote;
-import myapp.tae.ac.uk.myquicknote.model.UserDetailNote;
 import myapp.tae.ac.uk.myquicknote.presenter.INoteView;
 import myapp.tae.ac.uk.myquicknote.presenter.NotePresenter;
 import myapp.tae.ac.uk.myquicknote.services.DataService;
@@ -39,13 +36,16 @@ public class MainActivity extends AppCompatActivity implements INoteView, View.O
     private NotePresenter mPresenter;
     private NoteListRealmAdapter adapter;
     RestoreData temp = null;
+    DataService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mPresenter = new NotePresenter(this, new DataService(getApplication()));
+        service = new DataService();
+        mPresenter = new NotePresenter(this, service);
+        ((MyApplicaton) getApplication()).getLocalDataComponent().inject(service);
         setSupportActionBar(mToolbar);
         mFab.setOnClickListener(this);
         RealmResults<UserBriefNote> noteList = mPresenter.getNoteList();
@@ -121,20 +121,23 @@ public class MainActivity extends AppCompatActivity implements INoteView, View.O
     }
 
     public boolean showDeleteOption(final UserBriefNote userBriefNote) {
-//        temp.setRestoreId(userBriefNote.getNoteId());
-//        temp.setTitle(userBriefNote.getNoteTitle());
-//        temp.setLastModified(userBriefNote.getLastModified());
-//        temp.setFullNote(userBriefNote.getDetailNote().getNote());
-//        mPresenter.remove(userBriefNote);
-//        mPresenter.remove(userBriefNote);
-//        Snackbar.make(findViewById(R.id.clMainView), getString(R.string.action_delete_warning_message),
-//                Snackbar.LENGTH_LONG)
-//                .setAction(R.string.action_delete_UNDO, new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        mPresenter.restore(temp);
-//                    }
-//                }).show();
+        final Runnable removeRun = new Runnable() {
+            @Override
+            public void run() {
+                mPresenter.remove(userBriefNote);
+            }
+        };
+        final Handler handler = new Handler();
+        handler.postDelayed(removeRun, Snackbar.LENGTH_LONG + 1000 * 2);
+        Snackbar.make(findViewById(R.id.clMainView), getString(R.string.action_delete_warning_message),
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.action_delete_UNDO, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        handler.removeCallbacks(removeRun);
+                        notifyAdapterChange();
+                    }
+                }).show();
 
         return false;
     }

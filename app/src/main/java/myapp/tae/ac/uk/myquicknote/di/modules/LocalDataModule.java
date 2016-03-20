@@ -21,13 +21,13 @@ public class LocalDataModule {
 
     @Singleton
     @Provides
-    Realm provideRealmInstance(Application context) {
+    Realm provideRealmInstance(Context context) {
         return Realm.getInstance(context);
     }
 
     @Singleton
     @Provides
-    SharedPreferences provideSharedPreferences(Application context) {
+    SharedPreferences provideSharedPreferences(Context context) {
         return context.getSharedPreferences(context.getString(R.string.preference_name),
                 context.MODE_PRIVATE);
     }
