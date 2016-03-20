@@ -1,14 +1,20 @@
 package myapp.tae.ac.uk.myquicknote.ui;
 
+import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
+import android.util.AttributeSet;
 import android.view.View;
+
 
 /**
  * Created by Karma on 20/03/16.
  */
 public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
+    public ScrollAwareFABBehavior(Context context, AttributeSet attributes) {
+        super();
+    }
 
     @Override
     public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, FloatingActionButton child, View directTargetChild, View target, int nestedScrollAxes) {
